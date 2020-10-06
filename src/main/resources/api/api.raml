@@ -1,0 +1,134 @@
+#%RAML 1.0
+title: CMS-API
+description: Provide an API example to show mule ouath 2.0 security.
+mediaType:
+  - application/json
+version: 1.0.0
+protocols:
+  - HTTPS
+  
+securitySchemes:
+  OAuth2.0:
+    description: |
+      This API supports OAuth 2.0 for authenticating all API requests.
+    type: OAuth 2.0
+    describedBy:
+      headers:
+        authorization:
+          description: |
+             Used to send a valid OAuth 2 access token. Do not use with the "access_token" query
+             string parameter.
+          type: string
+      queryParameters:
+        access_token:
+          description: |
+             Used to send a valid OAuth 2 access token. Do not use together with the "Authorization"
+             header
+          type: string
+      responses:
+        400:
+          description: Invalid token.
+        401:
+          description: |
+            Unauthorized or Connection error when connecting to the authorization server.
+        403:
+          description: |
+            Forbidden, invalid client application credentials.
+        500:
+          description: |
+            Bad response from authorization server.
+    settings:
+      authorizationUri: https://dev-213770.okta.com/oauth2/default/v1/authorize
+      accessTokenUri: https://dev-213770.okta.com/oauth2/default/v1/token
+      authorizationGrants: [ authorization_code, implicit, client_credentials, password ]
+
+types:
+  User: !include types/user.raml
+  UserUpdate: !include types/user-patch.raml
+  Error: !include types/error.raml
+
+/users:
+  post:
+    description: Create a new user
+    body:
+      application/json:
+        type: User
+        example: !include examples/user.json  
+    responses:
+      201:
+        description: New user has been created.
+        headers:
+          location:
+            description: Provides the location of newly created record.
+            example: location=/user/22
+            type: string
+        body:
+          type: User
+          example: !include examples/user.json 
+    
+  get:
+    description: Retrieve providers based on various parameters.
+    responses:
+      200:
+        description: Return of the List of Users.  If none match the query params then an empty list will be returned.
+        body:
+          type: User[]
+          example: !include examples/user-list.json
+  /{userId}:
+    get:
+      description: Retrieve a specific User from the system
+      responses:
+        200:
+          description: Return a specific User
+          body:
+            type: User
+            example: !include examples/user.json
+        404:
+          description: User ID does not exist in the system
+          body:
+            type: Error
+            example: !include examples/404.json
+    put:
+      description: Update all details about a provider
+      body:
+        application/json:
+          type: User
+          example: !include examples/user.json
+      responses:
+        204:
+          description: No response body needed the entire payload was provided for the User
+          body:
+            type: User
+            example: !include examples/user.json
+        404:
+          description: User was not found and therefore no action can be taken
+          body:
+            type: Error
+            example: !include examples/404.json
+    patch:
+      description: Update a portion of the User data.  Only data elements passed in will be updated.
+      body:
+        application/json:
+          type: UserUpdate
+          example: !include examples/user-patch.json
+      responses:
+        200:
+          description: User has been updated with the data that has been provided.  New composite record has been attached.
+          body:
+            type: User
+            example: !include examples/user.json
+        404:
+          description: User was not found so no action was able to be taken
+          body:
+            type: Error
+            example: !include examples/404.json
+    delete:
+      description: Remove a User from the system.
+      responses:
+        204:
+          description: User was deleted from the system and will no longer be available.
+        404:
+          description: User was not found so no action was taken.
+          body:
+            type: Error
+            example: !include examples/404.json

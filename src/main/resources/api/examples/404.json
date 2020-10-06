@@ -1,0 +1,7 @@
+{
+	"code":"404",
+	"correlationID":"ns82nd74lfjs34a",
+	"message":"Record Not Found",
+	"description":"Entity that you are trying to access could not be found",
+	"link":"https://docs.api.cms.gov/api-status-codes"
+}

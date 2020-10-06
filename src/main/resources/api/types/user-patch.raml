@@ -1,0 +1,47 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+    id:
+      type: integer
+    name:
+      type: string
+      required: false
+    username:
+      type: string     
+    email:
+      type: string
+      required: false      
+    address:
+      type: object
+      required: false      
+      properties:
+        street:
+          type: string
+        suite:
+          type: string
+        city:
+          type: string
+        zipcode:
+          type: string
+        geo:
+          type: object
+          required: false
+          properties:
+            lat:
+              type: string   
+            lng:
+              type: string    
+    phone:
+      type: string
+      required: false      
+    website:
+      type: string
+      required: false
+    company:
+      type: object
+      required: false      
+      properties:
+        name:
+          type: string
+        catchPhrase:
+          type: string

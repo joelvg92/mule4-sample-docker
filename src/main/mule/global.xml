@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+   <http:listener-config name="mule-user-api-httpListenerConfig">
+        <http:listener-connection host="${http.host}" port="${http.port}" />
+    </http:listener-config>
+    <apikit:config name="mule-user-api-config" api="api/api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<configuration-properties doc:name="Configuration properties" doc:id="4186536d-fa86-4b9d-b1ec-baff9bb3c2aa" file="dev.properties" />
+<!-- 	<api-gateway:autodiscovery apiId="${api.id}" doc:name="API Autodiscovery" doc:id="f7adba0c-49eb-4037-ad75-90fc8756da99" flowRef="mule-user-api-main" />
+ -->	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="7a6c59e2-9405-4ed7-ba3c-1ed1588cfde6" responseTimeout="30000">
+		<http:request-connection host="${http.request.host}" protocol="HTTPS" port="${http.request.port}" connectionIdleTimeout="60000"/>
+	</http:request-config>
+	<configuration doc:name="Configuration" doc:id="c941609c-02db-482e-b77c-1ab7cfbcd0e0" defaultErrorHandler-ref="globalError_Handler" />
+	<error-handler name="globalError_Handler" doc:id="57bc0bec-d01f-4b80-bd72-28a85bd8f358" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e4d83865-4971-40c2-9fa1-edafb2914ae7" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="12e99593-0bb1-42c7-af5a-8497337d1dac" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+"message":"Upstream Service Error"
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>	
+	</mule>

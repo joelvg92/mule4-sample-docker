@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="mule-user-api-impl_getAllUsers_SubFlow"
+		doc:id="51b0c1a4-fd43-4da2-9a6f-783aab420416">
+		<http:request method="GET"
+			doc:name="Get All Users Request"
+			doc:id="8faaff63-00cb-4098-bb2f-16f4ac5ab724"
+			config-ref="HTTP_Request_configuration" path="/users" />
+		<ee:transform doc:name="Set payload" doc:id="bd7b477d-0dba-4f5f-9c7b-f0e2767caab3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="mule-user-api-impl_getUserById_SubFlow" doc:id="7663c444-a592-40fd-8089-be0a03525027" >
+		<http:request method="GET" doc:name="Get User By Id Request" doc:id="1685fd47-77f8-4880-ad1c-9a9e4ca336b0" config-ref="HTTP_Request_configuration" path="/users/{id}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"id" : vars.userId
+}]]]></http:uri-params>
+		</http:request>
+				<ee:transform doc:name="Set payload" doc:id="d02e5dec-f436-44bc-b52e-b834a96726a4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="mule-user-api-impl_updateUserById_SubFlow" doc:id="798f9e04-2e61-4953-bd32-df13535d380a" >
+		<http:request method="PUT" doc:name="Update User By Id Request" doc:id="29d81c48-c9ea-4b04-91d5-dcfbc04bd2a0" config-ref="HTTP_Request_configuration" path="/users/{id}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"id" : vars.userId
+}]]]></http:uri-params>
+		</http:request>
+				<ee:transform doc:name="Set payload" doc:id="8bf10d95-b4d6-4e20-a1fb-48800f2f0c7b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+		<sub-flow name="mule-user-api-impl_updateUserByIdPatch_SubFlow" doc:id="94765c01-f07b-4d66-b000-179848955574" >
+		<http:request method="PATCH" doc:name="Update User By Id Request" doc:id="083d7532-503b-4a77-8aaa-d17d870dc0c5" config-ref="HTTP_Request_configuration" path="/users/{id}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"id" : vars.userId
+}]]]></http:uri-params>
+		</http:request>
+				<ee:transform doc:name="Set payload" doc:id="ec7862e2-43cf-4511-a16f-a1aed9735cc2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="mule-user-api-impl_deleteUserById_SubFlow" doc:id="e4e29edc-1cb7-4db1-a399-086197d4367a" >
+		<http:request method="GET" doc:name="Delete User By Id Request" doc:id="6791a8b1-677b-43ce-8cb1-1d425b4d3d8f" config-ref="HTTP_Request_configuration" path="/users/{id}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"id" : vars.userId
+}]]]></http:uri-params>
+		</http:request>
+				<ee:transform doc:name="Set payload" doc:id="3fca6c5c-dc64-4967-8e53-e4bdc30373e3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="mule-user-api-impl_createUser_SubFlow" doc:id="d91dbb80-786b-4dbe-a882-a54c27e89011" >
+		<http:request method="POST" doc:name="Create User Request" doc:id="e12277b3-c605-4d50-a177-43fe6d83a6e7" path="/users" config-ref="HTTP_Request_configuration"/>
+			<ee:transform doc:name="Set payload" doc:id="041b7a96-746d-4934-8a1f-6b8e30a8c7fa" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+</mule>
